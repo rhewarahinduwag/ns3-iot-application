@@ -22,6 +22,9 @@ public:
    * \return the object TypeId
    */
   static TypeId GetTypeId (void);
+  
+  virtual void StartApplication (void);    // Called at time specified by Start
+  virtual void StopApplication (void);     // Called at time specified by Stop
 
   SmartGridApplication ();
 
@@ -47,6 +50,11 @@ public:
    */
   void SetDataRate (DataRate cbrRate);
   
+  void SetPeerAddress (Address peer);
+  
+  void SetLocalAddress (Address local);      
+  
+  void SetSocket (Ptr<Socket> socket);
   /**
    * \brief Return a pointer to associated socket.
    * \return pointer to associated socket
@@ -66,8 +74,8 @@ protected:
   virtual void DoDispose (void);
 private:
   // inherited from Application base class.
-  virtual void StartApplication (void);    // Called at time specified by Start
-  virtual void StopApplication (void);     // Called at time specified by Stop
+ 
+  
 
   //helpers
   /**

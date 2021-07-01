@@ -118,10 +118,31 @@ SmartGridApplication::SetInterArrivalTime (Time interArrivalTime)
 }
 
 void 
+SmartGridApplication::SetPeerAddress (Address peer)
+{
+  NS_LOG_FUNCTION (this << peer);
+  m_peer = peer;
+}
+
+void 
+SmartGridApplication::SetLocalAddress (Address local)
+{
+  NS_LOG_FUNCTION (this << local);
+  m_local = local;
+}
+
+void 
 SmartGridApplication::SetDataRate (DataRate cbrRate)
 {
   NS_LOG_FUNCTION (this << cbrRate);
   m_cbrRate = cbrRate;
+}
+
+void 
+SmartGridApplication::SetSocket (Ptr<Socket> socket)
+{
+  NS_LOG_FUNCTION (this << socket);
+  m_socket = socket;
 }
 
 Ptr<Socket>

@@ -43,6 +43,7 @@ main (int argc, char *argv[])
     {
       LogComponentEnable ("UdpEchoClientApplication", LOG_LEVEL_INFO);
       LogComponentEnable ("UdpEchoServerApplication", LOG_LEVEL_INFO);
+      LogComponentEnable ("SmartGridApplication", LOG_LEVEL_INFO);
     }
 
   nCsma = nCsma == 0 ? 1 : nCsma;
@@ -86,7 +87,7 @@ main (int argc, char *argv[])
   ApplicationContainer serverApps = echoServer.Install (csmaNodes.Get (nCsma));
   // the server is csmaNodes.get(3) ----> n4 is the server as nCsma = 3
   serverApps.Start (Seconds (1.0));
-  serverApps.Stop (Seconds (25.0));
+  serverApps.Stop (Seconds (200.0));
 
   UdpEchoClientHelper echoClient (csmaInterfaces.GetAddress (nCsma), 9);
   echoClient.SetAttribute ("MaxPackets", UintegerValue (100));
@@ -97,7 +98,11 @@ main (int argc, char *argv[])
   smartGrid.SetMaxBytes(1000); 
   smartGrid.SetPacketSize(1000);
   smartGrid.SetDataRate(DataRate ("1500kb/s"));
-  smartGrid.SetInterArrivalTime(Seconds (1));
+  smartGrid.SetInterArrivalTime(Seconds (0));
+  smartGrid.SetPeerAddress(csmaInterfaces.GetAddress (nCsma));
+  smartGrid.SetLocalAddress(csmaInterfaces.GetAddress (0));
+  smartGrid.SetSocket(Socket::CreateSocket (p2pNodes.Get (0), UdpSocketFactory::GetTypeId ()));
+  smartGrid.StartApplication();
 
   ApplicationContainer clientApps = echoClient.Install (p2pNodes.Get (0)); // n0 is the client
   clientApps.Start (Seconds (2.0));
@@ -122,6 +127,7 @@ main (int argc, char *argv[])
   pointToPoint.EnableAsciiAll(ascii.CreateFileStream("p2p.tr"));
   csma.EnableAsciiAll(ascii.CreateFileStream("csma.tr"));
 
+  smartGrid.StopApplication();	
   Simulator::Run ();
   Simulator::Destroy ();
   return 0;
